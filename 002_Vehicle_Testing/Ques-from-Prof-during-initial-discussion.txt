@@ -1,0 +1,13 @@
+What is the limit for the recuperation of Battery.. 
+Something related to Esp control..
+How is recuperation is taking place
+which Axle is doing it front/ back?
+Which axle is doing the recuperation
+
+1st engine axle induction 
+2nd engine pmsm machine
+
+What is happening in normal  recuperation and in deceleration condition,sudden braking(stability) 
+
+160kw charging intake practically observed but stated  250kw
+How much is sufficient for recuperation?
