@@ -1,4 +1,4 @@
-|CF,2,1,1;|CK,1,3,1,0;
+|CF,2,1,1;|CK,1,3,1,1;
 |NO,1,91,0,83,imc STUDIO 2022 R3 (03.10.2022)@imc DEVICES 2.15R3 (2022-09-06)@imcDev__21192168@PC,0,;
 |NL,1,8,1252,0x9;
 |CG,1,5,1,1,1;
@@ -12,5 +12,7 @@
 |CN,1,53,0,0,0,25,HVP_dcLinkVoltageFiltered,15,Werte: 550 SNA ;
 |Cb,1,152,1,0,         1,         1,               0,            1674,               0,            1674,    1,    0.000000000000000e+00,    1.399485068000000e+09,;
 |CS,1,            1691,               1,KKKKKKKKKKKKKKKKKJJJKKKKKKJIHJJIIJLMOLKKKKKLKKJJKKKKKIHKKIDFGFFEHJLLNMNNNNNOPPPQQQRRRQPPSQPPUTTOOQQQQRQQQQQQQPLFDHLOPPPRRPPOOOPPPQPPPPPPUUOMNPRRRRRQQQRRQSRQPOMLJJKMMMLMMLMWWVVRQQQPNMMMNPOOOPPPPRQQQQPOMMMLD6=EIJLOOOONLLKIJKLMMNPPPOMLKKMLLLLFCGHNOONMLKLLKKMLLLLLLKIJLLLLLLLJLLLKLKJLLLLLKLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLMMMLLLLLLPVZZZZ[[[[[[^accccdddddefgijklmmmmmnopqrssttuuvvvvvwwwwwwwwwwwwwxxwxxwxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyxxyyyyxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyzyzyyzyyzyzzyzyzzzzzzzzzzzzyxyyyyyyzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz{{{{{zz{{z{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{|{{||||||{|||||||||||||||||||||||||||||||||||||||||||||||||}}|}}||}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}~~}~}~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-|Cb,1,152,1,0,         1,         2,               0,               0,               0,               0,    1,    1.255000000000000e+03,    1.399485068000000e+09,;
-|CS,1,              19,               2,ffffffff
+|Cb,1,152,1,0,         1,         2,               0,              60,               0,              60,    1,    1.255000000000000e+03,    1.399485068000000e+09,;
+|CS,1,              77,               2,ffffffffffgfffffffffffffffeffe;
+|Cb,1,152,1,0,         1,         3,               0,              22,               0,              22,    1,    1.716000000000000e+03,    1.399485068000000e+09,;
+|CS,1,              39,               3,ccccccccccc;
