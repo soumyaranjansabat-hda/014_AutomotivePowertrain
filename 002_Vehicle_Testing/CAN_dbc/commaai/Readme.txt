@@ -6,3 +6,21 @@ https://github.com/commaai/opendbc/blob/master/tesla_model3_party.dbc
 
 
 Openpilot : https://github.com/commaai/openpilot/pull/32331
+
+
+
+--------
+
+Check CANBANA as well
+
+--------
+
+
+tesla_can.dbc : has problems. Doesnt open in db editor. I have not made any chages to them locally yet
+                
+                I have now manually updated the following: Removed the item
+                VAL_ 568 UI_mapSpeedLimit 31 "SNA" 30 "UNLIMITED" 29 "LESS_OR_EQ_160" 28 "LESS_OR_EQ_150" 27 "LESS_OR_EQ_140" 26 "LESS_OR_EQ_130" 25 "LESS_OR_EQ_120" 24 "LESS_OR_EQ_115" 23 "LESS_OR_EQ_110" 22 "LESS_OR_EQ_105" 21 "LESS_OR_EQ_100" 20 "LESS_OR_EQ_95" 19 "LESS_OR_EQ_90" 18 "LESS_OR_EQ_85" 17 "LESS_OR_EQ_80" 16 "LESS_OR_EQ_75" 15 "LESS_OR_EQ_70" 14 "LESS_OR_EQ_65" 13 "LESS_OR_EQ_60" 12 "LESS_OR_EQ_55" 11 "LESS_OR_EQ_50" 10 "LESS_OR_EQ_45" 9 "LESS_OR_EQ_40" 8 "LESS_OR_EQ_35" 7 "LESS_OR_EQ_30" 6 "LESS_OR_EQ_25" 5 "LESS_OR_EQ_20" 4 "LESS_OR_EQ_15" 3 "LESS_OR_EQ_10" 2 "LESS_OR_EQ_7" 1 "LESS_OR_EQ_5" 0 "UNKNOWN" ;
+                783
+                
+tesla_radar_bosch_generated.dbc, tesla_radar_continental_generated.dbc : These are manually generated files through scripts maybe. We dont use these.
+tesla_model3_vehicle.dbc : Manually added the NS_ and BS_
