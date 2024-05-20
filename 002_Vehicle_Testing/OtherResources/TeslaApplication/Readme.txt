@@ -1,0 +1,1 @@
+https://github.com/nmullaney/candash/blob/2a6548cf31579c709d6d5cf08a8b46ea10cddece/android/app/src/main/java/app/candash/cluster/CANSignalHelper.kt

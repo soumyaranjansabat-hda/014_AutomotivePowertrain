@@ -1,0 +1,180 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the data
+file_path = 'path_to_your_data.xlsx'
+data_df = pd.read_excel(file_path, sheet_name='Data', skiprows=[1])
+
+# Select relevant columns for analysis
+motor_columns = ['FrontHighVoltage1A5', 'FrontMotorCurrent1A5', 'FrontPower2E5', 'FrontTorque1D5',
+                 'RearHighVoltage126', 'RearMotorCurrent126', 'RearPower266', 'RearTorque1D8', 'DI_vehicleSpeed']
+motor_data_df = data_df[motor_columns]
+
+# Visualization: Scatter Plots
+sns.scatterplot(data=motor_data_df, x='FrontMotorCurrent1A5', y='FrontTorque1D5').set_title('Front Motor Current vs. Torque')
+sns.scatterplot(data=motor_data_df, x='RearMotorCurrent126', y='RearTorque1D8').set_title('Rear Motor Current vs. Torque')
+plt.show()
+
+# Visualization: Line Graphs
+sns.lineplot(data=motor_data_df, x='DI_vehicleSpeed', y='FrontTorque1D5').set_title('Vehicle Speed vs. Front Motor Torque')
+sns.lineplot(data=motor_data_df, x='DI_vehicleSpeed', y='RearTorque1D8').set_title('Vehicle Speed vs. Rear Motor Torque')
+plt.show()
+
+# Calculate the correlation matrix
+correlation_matrix = motor_data_df.corr()
+
+# Plot the correlation matrix as a heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=.5)
+plt.title('Correlation Matrix Heatmap')
+plt.show()
+
+# Time Series Analysis: Plotting Front Motor Torque over Time
+plt.figure(figsize=(12, 6))
+plt.plot(time_series_df['FrontTorque1D5'], label='Front Motor Torque')
+plt.title('Front Motor Torque Over Time')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Torque (Nm)')
+plt.legend()
+plt.show()
+
+# Correlation and Visualization Code for Regenerative Braking Analysis
+
+# Correlation Matrix for Motor Performance and Energy Recovery
+motor_performance_data = regen_braking_data[['FrontMotorCurrent1A5', 'RearMotorCurrent126', 'FrontTorque1D5', 'RearTorque1D8']]
+motor_performance_corr_matrix = motor_performance_data.corr()
+energy_recovery_data = regen_braking_data[['ESP_vehicleSpeed', 'RegenEnergyChange', 'SmoothBattCurrent132']]
+energy_recovery_corr_matrix = energy_recovery_data.corr()
+
+# Plotting Correlation Matrices
+plt.figure(figsize=(10, 5))
+sns.heatmap(motor_performance_corr_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Motor Performance Correlation Matrix')
+plt.figure(figsize=(10, 5))
+sns.heatmap(energy_recovery_corr_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Energy Recovery Correlation Matrix')
+
+# Line Graph for Regenerative Braking Analysis
+fig, ax1 = plt.subplots(figsize=(14, 8))
+ax1.plot(regen_braking_data['Time (relative)'], regen_braking_data['ESP_vehicleSpeed'], 'b-', label='Vehicle Speed')
+ax2 = ax1.twinx()
+ax2.plot(regen_braking_data['Time (relative)'], regen_braking_data['FrontMotorCurrent1A5'], 'r-', label='Front Motor Current')
+ax3 = ax1.twinx()
+ax3.spines['right'].set_position(('outward', 60))
+ax3.plot(regen_braking_data['Time (relative)'], regen_braking_data['RegenEnergyChange'], 'g-', label='Regen Energy Change')
+ax1.set_xlabel('Time (seconds)')
+ax1.set_ylabel('Speed (kph)')
+ax2.set_ylabel('Motor Current (A)')
+ax3.set_ylabel('Energy Change (kWh)')
+fig.tight_layout()
+fig.legend(loc='upper right', bbox_to_anchor=(1,1), bbox_transform=ax1.transAxes)
+plt.show()
+
+# Additional Python code for Regression Analysis and Visualization
+
+# Regression Model for Efficiency
+import statsmodels.api as sm
+predictors = sm.add_constant(regen_braking_events[['SOCave', 'FrontMotorCurrent1A5', 'RearMotorCurrent126', 'FrontTorque1D5', 'RearTorque1D8', 'ESP_vehicleSpeed']])
+target = regen_braking_events['Efficiency'].fillna(0)
+model = sm.OLS(target, predictors, missing='drop')
+results = model.fit()
+print(results.summary())
+
+# Heatmap and Line Graph Visualization Code
+# (The plotting code used in the analysis steps is included here as needed.)
+
+# Python code for Visualizing Regenerative Braking Dynamics with Split Graphs
+
+# Graph 1: Regenerative Energy Change and Vehicle Speed
+fig, ax1 = plt.subplots(figsize=(14, 6))
+ax1.plot(regen_braking_events.index, regen_braking_events['EnergyRecovered'], 'r-', label='Regen Energy Change')
+ax1.set_xlabel('Time (relative)')
+ax1.set_ylabel('Regen Energy Change (kWh)', color='r')
+ax2 = ax1.twinx()
+ax2.plot(regen_braking_events.index, regen_braking_events['ESP_vehicleSpeed'], 'b-', label='Vehicle Speed (ESP)')
+ax2.set_ylabel('Vehicle Speed (km/h)', color='b')
+plt.title('Regenerative Energy Change and Vehicle Speed Over Time')
+plt.legend()
+plt.show()
+
+# Graph 2: Rear Motor Current and Smooth Battery Current
+fig, ax1 = plt.subplots(figsize=(14, 6))
+ax1.plot(regen_braking_events.index, regen_braking_events['RearMotorCurrent126'], 'g-', label='Rear Motor Current')
+ax1.set_xlabel('Time (relative)')
+ax1.set_ylabel('Rear Motor Current (A)', color='g')
+ax2 = ax1.twinx()
+ax2.plot(regen_braking_events.index, regen_braking_events['SmoothBattCurrent132'], 'p-', label='Smooth Battery Current')
+ax2.set_ylabel('Smooth Battery Current (A)', color='p')
+plt.title('Rear Motor Current and Smooth Battery Current Over Time')
+plt.legend()
+plt.show()
+
+# Reload the dataset
+new_data = pd.read_excel(file_path, sheet_name='Data')
+
+# Convert the 'Time (relative)' column to numeric format, handling errors by dropping non-numeric rows
+new_data['Time (relative)'] = pd.to_numeric(new_data['Time (relative)'], errors='coerce')
+new_data.dropna(subset=['Time (relative)'], inplace=True)
+
+# Set the 'Time (relative)' column as the index
+new_data.set_index('Time (relative)', inplace=True)
+
+# Define the key metrics for trend analysis
+key_metrics = ['SmoothBattCurrent132', 'FrontMotorCurrent1A5', 'RearMotorCurrent126', 'BMS_maxRegenPower']
+
+# Plot the trend of key metrics over time
+fig, axs = plt.subplots(len(key_metrics), 1, figsize=(15, 20), sharex=True)
+fig.suptitle('Trend Analysis of Key Metrics Over Time', fontsize=16)
+
+for i, metric in enumerate(key_metrics):
+    ax = axs[i]
+    ax.plot(new_data.index, new_data[metric], label=metric, color='blue')
+    ax.set_ylabel(metric)
+    ax.legend()
+    ax.grid(True)
+
+axs[-1].set_xlabel('Time (relative)')
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+plt.show()
+
+# Apply a rolling mean to smooth the data with a window size of 50
+window_size = 50
+new_data['SmoothFrontMotorCurrent1A5'] = new_data['FrontMotorCurrent1A5'].rolling(window=window_size).mean()
+new_data['SmoothBMS_maxRegenPower'] = new_data['BMS_maxRegenPower'].rolling(window=window_size).mean()
+
+# Plot the smoothed data
+fig, axs = plt.subplots(2, 1, figsize=(15, 10), sharex=True)
+fig.suptitle('Smoothed Trend Analysis of Key Metrics Over Time', fontsize=16)
+
+# Plot Front Motor Current with smoothing
+axs[0].plot(new_data.index, new_data['FrontMotorCurrent1A5'], label='Front Motor Current (Original)', color='blue', alpha=0.5)
+axs[0].plot(new_data.index, new_data['SmoothFrontMotorCurrent1A5'], label='Front Motor Current (Smoothed)', color='red')
+axs[0].set_ylabel('Front Motor Current (A)')
+axs[0].legend()
+axs[0].grid(True)
+
+# Plot Regenerative Braking Power with smoothing
+axs[1].plot(new_data.index, new_data['BMS_maxRegenPower'], label='Max Regen Power (Original)', color='blue', alpha=0.5)
+axs[1].plot(new_data.index, new_data['SmoothBMS_maxRegenPower'], label='Max Regen Power (Smoothed)', color='red')
+axs[1].set_ylabel('Max Regen Power (kW)')
+axs[1].legend()
+axs[1].grid(True)
+
+axs[-1].set_xlabel('Time (relative)')
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+plt.show()
+
+# Examine the data range by plotting the histogram of FrontMotorCurrent1A5
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.hist(new_data['FrontMotorCurrent1A5'].dropna(), bins=50, color='blue', alpha=0.7)
+ax.set_title('Distribution of Front Motor Current (FrontMotorCurrent1A5)')
+ax.set_xlabel('Front Motor Current (A)')
+ax.set_ylabel('Frequency')
+plt.grid(True)
+plt.show()
+
+# Perform statistical analysis to understand the mean, median, and variance
+front_motor_stats = new_data['FrontMotorCurrent1A5'].describe()
+front_motor_stats
