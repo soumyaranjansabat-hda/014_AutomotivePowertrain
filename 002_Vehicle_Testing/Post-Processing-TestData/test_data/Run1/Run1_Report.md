@@ -30,7 +30,7 @@ Time-series plots were created for battery voltages, state of charge, and wheel 
 - High-speed tests are clearly indicated by the wheel speed data, highlighting the vehicle's performance capabilities.
 
 ### Inference from Statistical Summary
-The analysis provided valuable insights into the vehicle's performance under test conditions. Further detailed analysis could focus on specific periods of interest or additional parameters to deepen the understanding of vehicle dynamics and battery performance.
+- The analysis provided valuable insights into the vehicle's performance under test conditions. Further detailed analysis could focus on specific periods of interest or additional parameters to deepen the understanding of vehicle dynamics and battery performance.
 
 # Vehicle Testing Data Analysis
 
