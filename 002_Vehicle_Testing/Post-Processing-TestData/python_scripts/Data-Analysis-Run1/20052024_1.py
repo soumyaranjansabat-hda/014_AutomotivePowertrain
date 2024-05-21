@@ -1230,7 +1230,402 @@ braking_events = data_cleaned[(data_cleaned['ESP_brakeTorqueFrL'] > 50) |
 data_cleaned['BrakingEvent'] = 0
 data_cleaned.loc[braking_events.index, 'BrakingEvent'] = 1
 
+
+## 13. Events with significant changes in Yaw, Pitch or Roll
+
+# # Identify the relevant columns for plotting -- Test to see if data is being plotted correctly
+# time_column = 'Time (relative)'
+# brake_torque_column = 'ESP_brakeTorqueFrL'
+# # Clean the data by removing the header row if present and converting columns to appropriate data types
+# data_cleaned[time_column] = data_cleaned[time_column].astype(float)
+# data_cleaned[brake_torque_column] = data_cleaned[brake_torque_column].astype(float)
+# # Plot the graph
+# plt.figure(figsize=(12, 6))
+# plt.plot(data_cleaned[time_column], data_cleaned[brake_torque_column], label='ESP_brakeTorqueFrL')
+# plt.xlabel('Time (seconds)')
+# plt.ylabel('Brake Torque (Nm)')
+# plt.title('ESP Brake Torque Front Left vs Time')
+# plt.legend()
+# plt.grid(True)
+# plt.show()
+
+# Plotting Yaw, Pitch, and Roll rates with respect to time
+
+plt.figure(figsize=(14, 8))
+
+# Yaw Rate
+plt.subplot(3, 1, 1)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['RCM_yawRate'], label='Yaw Rate', color='blue')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Yaw Rate (deg/s)')
+plt.title('Yaw Rate vs Time')
+plt.grid(True)
+plt.legend()
+
+# Pitch Rate
+plt.subplot(3, 1, 2)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['RCM_pitchRate'], label='Pitch Rate', color='green')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Pitch Rate (deg/s)')
+plt.title('Pitch Rate vs Time')
+plt.grid(True)
+plt.legend()
+
+# Roll Rate
+plt.subplot(3, 1, 3)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['RCM_rollRate'], label='Roll Rate', color='red')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Roll Rate (deg/s)')
+plt.title('Roll Rate vs Time')
+plt.grid(True)
+plt.legend()
+
+plt.tight_layout()
+plt.savefig(save_dir + r'\YawPitchRoll_Combined.png')
+plt.show()
+
+
+## 14. Brake Torques For All Four Wheels Vs Time
+
+plt.figure(figsize=(14, 12))
+
+# Front Left Brake Torque
+plt.subplot(4, 1, 1)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrL'], label='Front Left Brake Torque', color='blue')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Front Left Brake Torque vs Time')
+plt.legend()
+plt.grid(True)
+
+# Front Right Brake Torque
+plt.subplot(4, 1, 2)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrR'], label='Front Right Brake Torque', color='green')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Front Right Brake Torque vs Time')
+plt.legend()
+plt.grid(True)
+
+# Rear Left Brake Torque
+plt.subplot(4, 1, 3)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReL'], label='Rear Left Brake Torque', color='red')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Rear Left Brake Torque vs Time')
+plt.legend()
+plt.grid(True)
+
+# Rear Right Brake Torque
+plt.subplot(4, 1, 4)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReR'], label='Rear Right Brake Torque', color='orange')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Rear Right Brake Torque vs Time')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig(save_dir + r'\AllWheelBrakeTorquel_Combined.png')
+plt.show()
+
+## 15. Steering Angle during Stability Events vs. Time
+
+# Set your desired ranges here
+x_min, x_max = 0, 1000  # Example range for x-axis
+y_min, y_max = -400, 400  # Example range for y-axis
+
+plt.figure(figsize=(14, 8))
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['SteeringAngle129'], label='Steering Angle', color='purple')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Steering Angle (degrees)')
+plt.title('Steering Angle during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+# Apply the axis ranges
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+
+# plt.xticks(ticks=np.linspace(x_min, x_max, num=20), rotation=45)  # More detailed x-axis with more tick marks
+
+plt.savefig(save_dir + r'\SteeringAngle.png')
+plt.show()
+
+
+## 16. Analysis of Vehicle Stability during Stability Events and Sharp Turns
+
+# Define thresholds for sharp turns and stability events
+steering_threshold = 30  # Degrees
+yaw_rate_threshold = 3  # Degrees per second (example threshold)
+pitch_rate_threshold = 2  # Degrees per second (example threshold)
+roll_rate_threshold = 2  # Degrees per second (example threshold)
+
+# Identify sharp turns
+sharp_turns = data_cleaned[abs(data_cleaned['SteeringAngle129']) > steering_threshold]
+
+# Identify stability events
+stability_events = data_cleaned[
+    (abs(data_cleaned['RCM_yawRate']) > yaw_rate_threshold) |
+    (abs(data_cleaned['RCM_pitchRate']) > pitch_rate_threshold) |
+    (abs(data_cleaned['RCM_rollRate']) > roll_rate_threshold)
+]
+
+# Plot Steering Angle during identified sharp turns and stability events
+plt.figure(figsize=(14, 8))
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['SteeringAngle129'], label='Steering Angle', color='purple', alpha=0.5)
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['SteeringAngle129'], color='red', label='Sharp Turns', marker='x')
+plt.scatter(stability_events['Time (relative)'], stability_events['SteeringAngle129'], color='blue', label='Stability Events', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Steering Angle (degrees)')
+plt.title('Steering Angle during Stability Events and Sharp Turns vs Time')
+plt.legend()
+plt.grid(True)
+plt.savefig(save_dir + r'\SteeringAngle_SharpTurnsTime.png')
+plt.show()
+
+# Plot Yaw Rate, Pitch Rate, and Roll Rate during identified events
+plt.figure(figsize=(14, 12))
+
+# Yaw Rate
+plt.subplot(3, 1, 1)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['RCM_yawRate'], label='Yaw Rate', color='blue', alpha=0.5)
+plt.scatter(stability_events['Time (relative)'], stability_events['RCM_yawRate'], color='red', label='Stability Events', marker='x')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Yaw Rate (deg/s)')
+plt.title('Yaw Rate during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+# Pitch Rate
+plt.subplot(3, 1, 2)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['RCM_pitchRate'], label='Pitch Rate', color='green', alpha=0.5)
+plt.scatter(stability_events['Time (relative)'], stability_events['RCM_pitchRate'], color='red', label='Stability Events', marker='x')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Pitch Rate (deg/s)')
+plt.title('Pitch Rate during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+# Roll Rate
+plt.subplot(3, 1, 3)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['RCM_rollRate'], label='Roll Rate', color='red', alpha=0.5)
+plt.scatter(stability_events['Time (relative)'], stability_events['RCM_rollRate'], color='blue', label='Stability Events', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Roll Rate (deg/s)')
+plt.title('Roll Rate during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig(save_dir + r'\SteeringAngle_YawPitchRoll.png')
+plt.show()
+
+# Plot Brake Torques during identified sharp turns and stability events
+plt.figure(figsize=(14, 12))
+
+# Front Left Brake Torque
+plt.subplot(4, 1, 1)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrL'], label='Front Left Brake Torque', color='blue', alpha=0.5)
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['ESP_brakeTorqueFrL'], color='red', label='Sharp Turns', marker='x')
+plt.scatter(stability_events['Time (relative)'], stability_events['ESP_brakeTorqueFrL'], color='blue', label='Stability Events', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Front Left Brake Torque during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+# Front Right Brake Torque
+plt.subplot(4, 1, 2)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrR'], label='Front Right Brake Torque', color='green', alpha=0.5)
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['ESP_brakeTorqueFrR'], color='red', label='Sharp Turns', marker='x')
+plt.scatter(stability_events['Time (relative)'], stability_events['ESP_brakeTorqueFrR'], color='blue', label='Stability Events', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Front Right Brake Torque during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+# Rear Left Brake Torque
+plt.subplot(4, 1, 3)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReL'], label='Rear Left Brake Torque', color='red', alpha=0.5)
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['ESP_brakeTorqueReL'], color='blue', label='Sharp Turns', marker='x')
+plt.scatter(stability_events['Time (relative)'], stability_events['ESP_brakeTorqueReL'], color='red', label='Stability Events', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Rear Left Brake Torque during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+# Rear Right Brake Torque
+plt.subplot(4, 1, 4)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReR'], label='Rear Right Brake Torque', color='orange', alpha=0.5)
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['ESP_brakeTorqueReR'], color='red', label='Sharp Turns', marker='x')
+plt.scatter(stability_events['Time (relative)'], stability_events['ESP_brakeTorqueReR'], color='blue', label='Stability Events', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Rear Right Brake Torque during Stability Events vs Time')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig(save_dir + r'\SteeringAngle_BrakeTorques.png')
+plt.show()
+
+
+# Compare ESP Performance Across Different Conditions
+# Define conditions for different driving scenarios
+sharp_turns = data_cleaned[abs(data_cleaned['SteeringAngle129']) > steering_threshold]
+straight_line_braking = data_cleaned[(abs(data_cleaned['SteeringAngle129']) < 10) & (data_cleaned['ESP_brakeTorqueFrL'] > 0)]
+curve_handling = data_cleaned[(abs(data_cleaned['SteeringAngle129']) > 10) & (abs(data_cleaned['SteeringAngle129']) <= steering_threshold)]
+
+# Analyze potential understeer scenarios
+understeer_threshold = 0.1  # Define a threshold for understeer detection (example)
+understeer_events = data_cleaned[(abs(data_cleaned['SteeringAngle129']) > steering_threshold) & (data_cleaned['RCM_yawRate'] < understeer_threshold)]
+
+# Plot ESP performance across different conditions
+plt.figure(figsize=(14, 12))
+
+# Sharp Turns
+plt.subplot(3, 1, 1)
+plt.plot(sharp_turns['Time (relative)'], sharp_turns['SteeringAngle129'], label='Steering Angle', color='purple', alpha=0.5)
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['RCM_yawRate'], color='blue', label='Yaw Rate')
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['ESP_brakeTorqueFrL'], color='red', label='Brake Torque Front Left')
+plt.scatter(sharp_turns['Time (relative)'], sharp_turns['ESP_brakeTorqueReL'], color='orange', label='Brake Torque Rear Left')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Values')
+plt.title('ESP Performance during Sharp Turns')
+plt.legend()
+plt.grid(True)
+
+# Straight Line Braking
+plt.subplot(3, 1, 2)
+plt.plot(straight_line_braking['Time (relative)'], straight_line_braking['SteeringAngle129'], label='Steering Angle', color='purple', alpha=0.5)
+plt.scatter(straight_line_braking['Time (relative)'], straight_line_braking['RCM_yawRate'], color='blue', label='Yaw Rate')
+plt.scatter(straight_line_braking['Time (relative)'], straight_line_braking['ESP_brakeTorqueFrL'], color='red', label='Brake Torque Front Left')
+plt.scatter(straight_line_braking['Time (relative)'], straight_line_braking['ESP_brakeTorqueReL'], color='orange', label='Brake Torque Rear Left')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Values')
+plt.title('ESP Performance during Straight Line Braking')
+plt.legend()
+plt.grid(True)
+
+# Curve Handling
+plt.subplot(3, 1, 3)
+plt.plot(curve_handling['Time (relative)'], curve_handling['SteeringAngle129'], label='Steering Angle', color='purple', alpha=0.5)
+plt.scatter(curve_handling['Time (relative)'], curve_handling['RCM_yawRate'], color='blue', label='Yaw Rate')
+plt.scatter(curve_handling['Time (relative)'], curve_handling['ESP_brakeTorqueFrL'], color='red', label='Brake Torque Front Left')
+plt.scatter(curve_handling['Time (relative)'], curve_handling['ESP_brakeTorqueReL'], color='orange', label='Brake Torque Rear Left')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Values')
+plt.title('ESP Performance during Curve Handling')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig(save_dir + r'\CompareESPPerf.png')
+plt.show()
+
+# Analyze Data for Signs of Understeer
+# Plot understeer events
+plt.figure(figsize=(14, 8))
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['SteeringAngle129'], label='Steering Angle', color='purple', alpha=0.5)
+plt.scatter(understeer_events['Time (relative)'], understeer_events['SteeringAngle129'], color='red', label='Understeer Event', marker='x')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Steering Angle (degrees)')
+plt.title('Understeer Detection based on Steering Angle vs Yaw Rate')
+plt.legend()
+plt.grid(True)
+plt.savefig(save_dir + r'\UndersteerAnalysis.png')
+plt.show()
+
+
+## 17. Comparing Understeer to Oversteer Behavior
+# Define thresholds for understeer and oversteer detection
+understeer_steering_threshold = 30  # Degrees
+understeer_yaw_rate_threshold = 0.1  # Degrees per second (example threshold)
+
+oversteer_yaw_rate_threshold = 3  # Degrees per second (example threshold)
+oversteer_steering_threshold = 10  # Degrees
+
+# Identify understeer events
+understeer_events = data_cleaned[
+    (abs(data_cleaned['SteeringAngle129']) > understeer_steering_threshold) & 
+    (abs(data_cleaned['RCM_yawRate']) < understeer_yaw_rate_threshold)
+]
+
+# Identify oversteer events
+oversteer_events = data_cleaned[
+    (abs(data_cleaned['RCM_yawRate']) > oversteer_yaw_rate_threshold) & 
+    (abs(data_cleaned['SteeringAngle129']) < oversteer_steering_threshold)
+]
+
+# Plot Steering Angle and Yaw Rate for Understeer and Oversteer
+plt.figure(figsize=(14, 12))
+
+# Understeer Events
+plt.subplot(2, 1, 1)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['SteeringAngle129'], label='Steering Angle', color='purple', alpha=0.5)
+plt.scatter(understeer_events['Time (relative)'], understeer_events['SteeringAngle129'], color='red', label='Understeer Event', marker='x')
+plt.scatter(understeer_events['Time (relative)'], understeer_events['RCM_yawRate'], color='blue', label='Yaw Rate during Understeer', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Values')
+plt.title('Understeer Detection based on Steering Angle and Yaw Rate')
+plt.legend()
+plt.grid(True)
+
+# Oversteer Events
+plt.subplot(2, 1, 2)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['RCM_yawRate'], label='Yaw Rate', color='blue', alpha=0.5)
+plt.scatter(oversteer_events['Time (relative)'], oversteer_events['RCM_yawRate'], color='red', label='Oversteer Event', marker='x')
+plt.scatter(oversteer_events['Time (relative)'], oversteer_events['SteeringAngle129'], color='purple', label='Steering Angle during Oversteer', marker='o')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Values')
+plt.title('Oversteer Detection based on Yaw Rate and Steering Angle')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig(save_dir + r'\Understeer_OverSteer_Events.png')
+plt.show()
+
+# Plot Brake Torques for Understeer and Oversteer events
+plt.figure(figsize=(14, 12))
+
+# Brake Torques during Understeer Events
+plt.subplot(2, 1, 1)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrL'], label='Front Left Brake Torque', color='blue', alpha=0.5)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrR'], label='Front Right Brake Torque', color='green', alpha=0.5)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReL'], label='Rear Left Brake Torque', color='red', alpha=0.5)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReR'], label='Rear Right Brake Torque', color='orange', alpha=0.5)
+plt.scatter(understeer_events['Time (relative)'], understeer_events['ESP_brakeTorqueFrL'], color='red', label='Understeer Event', marker='x')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Brake Torques during Understeer Events')
+plt.legend()
+plt.grid(True)
+
+# Brake Torques during Oversteer Events
+plt.subplot(2, 1, 2)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrL'], label='Front Left Brake Torque', color='blue', alpha=0.5)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueFrR'], label='Front Right Brake Torque', color='green', alpha=0.5)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReL'], label='Rear Left Brake Torque', color='red', alpha=0.5)
+plt.plot(data_cleaned['Time (relative)'], data_cleaned['ESP_brakeTorqueReR'], label='Rear Right Brake Torque', color='orange', alpha=0.5)
+plt.scatter(oversteer_events['Time (relative)'], oversteer_events['ESP_brakeTorqueFrR'], color='red', label='Oversteer Event', marker='x')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Brake Torque (Nm)')
+plt.title('Brake Torques during Oversteer Events')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig(save_dir + r'\Understeer_OverSteer_BrakeTorque.png')
+plt.show()
+
+
+# Analysis of Vehicle Stability During Braking Events
 ## 1. Energy Distribution During Braking Events
+
 # Plot energy consumption and regeneration during braking events
 plt.figure(figsize=(14, 8))
 plt.plot(data_cleaned['Time (relative)'], data_cleaned['BMS_kwhRegenChargeTotal'], label='Regenerative Charge Total', color='green')
@@ -1837,6 +2232,7 @@ plt.ylabel('Max Regenerative Power (kW)')
 plt.savefig(save_dir + r'\MaxRegenPowUnderDiffDrivCond.png')
 plt.show()
 
+
 ## 4. Battery State of Charge (SoC) Dynamics --- This is removed now.
 # Plotting Battery State of Charge (SoC) Over Time
 # plt.figure(figsize=(14, 8))
@@ -1850,6 +2246,15 @@ plt.show()
 # plt.grid(True)
 # plt.savefig(save_dir + r'\SOCOverTime.png')
 # plt.show()
+
+## 4. Battery State of Charge (SoC) Dynamics [MD file content]
+# **Observations**:
+# - Battery SoC changes dynamically with driving conditions and power demand.
+# - Regenerative braking contributes to maintaining or increasing SoC during deceleration.
+
+# **Insights**:
+# - Monitoring SoC dynamics helps in managing battery health and optimizing energy usage.
+# - Understanding SoC changes can guide the development of more efficient regenerative braking systems.
 
 
 ## 5. Impact of Vehicle Speed on Powertrain Performance

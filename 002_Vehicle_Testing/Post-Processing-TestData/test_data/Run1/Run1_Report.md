@@ -913,6 +913,146 @@ The analysis provided valuable insights into the vehicle's performance under tes
 - Visualizing these relationships helps in identifying patterns and potential issues in vehicle stability and dynamics.
 - Detailed pairplot analysis can reveal deeper insights into how different parameters interact under various driving conditions.
 
+## 13. Events with significant changes in Yaw, Pitch or Roll
+
+**Observations**:
+- **Yaw Rate vs. Time**: The yaw rate graph shows how the vehicle's rotational speed around the vertical axis changes over time.
+Sharp peaks and troughs indicate moments of rapid turning or spinning, which can be linked to significant steering inputs.
+
+- **Pitch Rate vs. Time**: The pitch rate graph illustrates the vehicle's rotational speed around the lateral axis.
+Variations in pitch rate may correspond to acceleration and braking events, where the vehicle pitches forward or backward.
+
+- **Roll Rate vs. Time**: The roll rate graph shows the vehicle's rotational speed around the longitudinal axis.
+Changes in roll rate often occur during cornering or when the vehicle experiences lateral forces, causing it to roll to the side.
+
+
+## 14. Brake Torques For All Four Wheels Vs Time
+
+**Observations**:
+- The graph shows the brake torque applied to each of the four wheels over time.
+- **Front Wheels (Blue and Green)**: The front left and front right brake torques generally follow a similar pattern, indicating synchronized braking efforts for the front wheels.
+- **Front Left Brake Torque (Top Left)**: Displays the brake torque applied to the front left wheel over time. Notable peaks and troughs indicate braking events.
+- **Front Right Brake Torque (Top Right)**: Shows the brake torque applied to the front right wheel. The pattern is similar to the front left, indicating synchronized braking.
+- **Rear Wheels (Red and Orange)**: Similarly, the rear left and rear right brake torques exhibit synchronized behavior, although the magnitudes might be slightly different from the front wheels.
+- **Rear Left Brake Torque (Bottom Left)**: Represents the brake torque for the rear left wheel. The magnitude and pattern of changes are comparable to the front wheels but might have slight differences.
+- **Rear Right Brake Torque (Bottom Right)**: Illustrates the brake torque for the rear right wheel. The synchronization with the rear left wheel can be observed here.
+- **Dynamic Adjustments**: The brake torques for all four wheels show dynamic adjustments, likely corresponding to driving conditions such as acceleration, braking, and turning.
+
+## 15. Steering Angle during Stability Events vs. Time
+**Observations**:
+- The graph shows the variation in the steering angle over time.
+- Significant changes in the steering angle indicate moments of sharp turns or corrective maneuvers, which are critical during stability events.
+- Peaks and troughs in the graph represent the vehicle's steering adjustments to maintain stability.
+
+## 16. Analysis of Vehicle Stability during Stability Events and Sharp Turns
+
+**Observations**:
+- Steering Angle during Stability Events and Sharp Turns:
+- Red markers indicate sharp turns (steering angle > ±30 degrees).
+- Blue markers indicate stability events (significant changes in yaw, pitch, or roll rates).
+- The graph shows that sharp turns often coincide with stability events, as significant steering inputs typically require stability control interventions.
+
+**Yaw Rate, Pitch Rate, and Roll Rate during Stability Events**:
+
+- **Yaw Rate**: Red markers indicate that stability events often involve significant changes in yaw rate, corresponding to rapid directional changes.
+- **Pitch Rate**: Stability events also show notable changes in pitch rate, often due to acceleration or braking forces affecting the vehicle's longitudinal stability.
+- **Roll Rate**: The roll rate changes indicate lateral forces acting on the vehicle, such as during sharp turns or skidding.
+
+**Brake Torques during Stability Events and Sharp Turns**:
+
+- Front Left and Front Right Brake Torques: The brake torques on the front wheels are dynamically adjusted during sharp turns and stability events, showing synchronized efforts to counteract skidding or loss of control.
+- Rear Left and Rear Right Brake Torques: Similarly, the rear wheel brake torques are adjusted, but with slightly different magnitudes, reflecting the distribution of braking forces to maintain stability.
+
+**Interpretation**:
+- **Steering and Yaw Dynamics**: During sharp turns, significant changes in steering angle lead to rapid adjustments in yaw rate, necessitating stability control interventions to prevent oversteer or understeer.
+- **Pitch and Roll Adjustments**: Stability events often involve changes in pitch and roll rates, indicating the vehicle's response to longitudinal and lateral forces. Stability control systems adjust brake torques to manage these forces and maintain balance.
+- **Brake Torque Modulation**: The ESP system dynamically adjusts brake torques across all four wheels to manage stability during sharp turns and stability events. This helps in preventing skidding and maintaining control.
+
+
+**Comparision of ESP Performance Across Different Conditions**:
+
+- **Sharp Turns**: Defined by significant steering angle changes.
+- **Straight Line Braking**: Analyze how ESP maintains stability when the vehicle is primarily moving straight but undergoing heavy braking.
+- **Curve Handling**: Defined by moderate and consistent steering angles.
+Analyze ESP performance in maintaining stability by observing yaw, pitch, roll rates, and brake torques.
+
+
+**Analyze Data for Signs of Understeer**: 
+- Understeer occurs when the vehicle turns less than intended by the driver, typically seen when the front wheels lose traction. Signs of understeer include:
+
+- **Increased Steering Angle without Proportional Yaw Rate Increase**: Significant increase in steering angle with a smaller increase in yaw rate.
+- **Brake Torque Adjustments**: ESP might apply more braking force to the rear wheels to balance the vehicle.
+
+**Implementation of filtering and analyzing data for signs of understeer**:
+
+- **Sharp Turns**: The plot shows significant steering angle changes (sharp turns) with corresponding adjustments in yaw rate and brake torques. During sharp turns, the ESP system dynamically adjusts brake torques (especially front left and rear left) to stabilize the vehicle. The yaw rate changes in response to these steering inputs, helping to prevent oversteer or understeer.
+- **Straight Line Braking**: This plot focuses on scenarios where the vehicle is primarily moving straight but undergoing heavy braking. During straight-line braking, the steering angle remains minimal while brake torques on the front and rear wheels are applied to decelerate the vehicle. The yaw rate remains relatively stable, indicating that the vehicle maintains a straight path.
+- **Curve Handling**: This plot examines moderate and consistent steering angles, indicative of handling curves. The ESP system adjusts brake torques to maintain stability while navigating curves. Yaw rate changes correspond to the curved path, with brake torque adjustments preventing excessive roll or yaw.
+
+**Understeer Detection**
+- Understeer occurs when the vehicle's front wheels lose traction, causing it to turn less than intended by the driver.
+- Significant steering angle without a proportional increase in yaw rate. Identified by red markers indicating understeer events.
+
+**Insightful Inference**:
+- Steering Angle vs. Yaw Rate: The red markers indicate potential understeer events, where the steering angle is high, but the yaw rate is not proportionally increasing. This can be a sign of the front wheels losing traction, and the ESP system might respond by adjusting brake torques to regain control.
+- The ESP system effectively adjusts brake torques and yaw rates to maintain stability during sharp turns, straight-line braking, and curve handling.
+Understeer detection highlights scenarios where the vehicle's response does not match the steering input, indicating potential traction loss.
+
+
+## 17. Comparing Understeer to Oversteer Behavior
+
+**Understeer:** 
+- Understeer occurs when the front wheels lose traction, causing the vehicle to turn less than intended.
+- Significant increase in steering angle with a smaller increase in yaw rate.
+- The vehicle tends to continue in a straight line despite steering inputs.
+- The ESP system may apply braking to the rear wheels to help regain front traction.
+
+**Oversteer:**
+- Oversteer occurs when the rear wheels lose traction, causing the vehicle to turn more than intended.
+- Smaller steering angle with a disproportionately large increase in yaw rate.
+- The rear of the vehicle tends to slide outward, causing the vehicle to rotate more.
+- The ESP system may apply braking to the front wheels to counteract the excessive yaw.
+
+**Identifying and Analyzing Understeer and Oversteer Events:**
+- Identifying Understeer Events: Use high steering angle without a proportional increase in yaw rate.
+- Identifying Oversteer Events: Use high yaw rate with a smaller steering angle.
+
+
+**Insights to Implementation**:
+- Identify understeer events using high steering angle and low yaw rate.
+- Identify oversteer events using high yaw rate and low steering angle.
+- Compare the brake torques and yaw rates during these events.
+
+**Define Thresholds for Detection**:
+- Understeer: High steering angle (> 30 degrees), Low yaw rate (< 0.1 degrees per second)
+- Oversteer: High yaw rate (> 3 degrees per second), Low steering angle (< 10 degrees).
+
+**Comparison of Understeer and Oversteer Behavior**:
+
+- **Understeer Detection characteristics:**
+    - High Steering Angle with Low Yaw Rate
+    - Significant increase in steering angle without a proportional increase in yaw rate indicates understeer.
+    - The vehicle tends to turn less than intended, continuing in a straight line despite steering inputs.
+
+- **ESP Response:**
+    - Brake Torques: During understeer events, the ESP system may increase braking force on the rear wheels to regain front traction.
+    - Graph Analysis: The red markers in the upper plot indicate understeer events, showing significant steering angles with low yaw rates. The lower plot shows brake torque adjustments, with the rear wheels receiving more braking force to mitigate understeer.
+
+- **Oversteer Detection characteristics:**
+    - High Yaw Rate with Low Steering Angle
+    - Disproportionate increase in yaw rate with a small steering angle indicates oversteer.
+    - The vehicle turns more than intended, with the rear sliding outwards.
+
+- **ESP Response:**
+    - Brake Torques: During oversteer events, the ESP system may increase braking force on the front wheels to counteract the excessive yaw.
+    - Graph Analysis: The red markers in the upper plot indicate oversteer events, showing significant yaw rates with low steering angles. The lower plot shows brake torque adjustments, with the front wheels receiving more braking force to mitigate oversteer.
+
+**Summary of Observations**:
+
+- **Understeer**: Detected by high steering angle with low yaw rate. ESP Responses in increased braking on rear wheels to regain front traction. Visual indicators with red markers in the upper plot for understeer events and corresponding brake torque adjustments in the lower plot.
+
+- **Oversteer**: Detected by high yaw rate with low steering angle. ESP Responses in Increased braking on front wheels to counteract excessive yaw. Visual indicators with red markers in the upper plot for oversteer events and corresponding brake torque adjustments in the lower plot.
+
 # Analysis of Vehicle Stability During Braking Events
 
 ## 1. Energy Distribution During Braking Events
@@ -1231,16 +1371,6 @@ The analysis provided valuable insights into the vehicle's performance under tes
 **Insights**:
 - Understanding power demand and regenerative braking efficiency across drive cycles can inform powertrain optimization.
 - Analyzing drive cycles helps in designing better energy management systems.
-
-## 4. Battery State of Charge (SoC) Dynamics
-
-**Observations**:
-- Battery SoC changes dynamically with driving conditions and power demand.
-- Regenerative braking contributes to maintaining or increasing SoC during deceleration.
-
-**Insights**:
-- Monitoring SoC dynamics helps in managing battery health and optimizing energy usage.
-- Understanding SoC changes can guide the development of more efficient regenerative braking systems.
 
 ## 5. Impact of Vehicle Speed on Powertrain Performance
 
